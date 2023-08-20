@@ -5,6 +5,7 @@ An implementation that acts as a bridge between SMS messaging and chatGPT. It al
 
 This implementation runs on
 - [Laravel](https://laravel.com/docs).
+- [Livewire](https://laravel-livewire.com/)
 - [ChapGPT](https://platform.openai.com/overview).
 - [Tailwind](https://tailwindcss.com/)
 
@@ -12,7 +13,7 @@ This implementation runs on
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [gkwambata@gmail.com](mailto:gkwambata@gmail.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within Laravel, please send an e-mail to George Kwambata via [gkwambata@gmail.com](mailto:gkwambata@gmail.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 
