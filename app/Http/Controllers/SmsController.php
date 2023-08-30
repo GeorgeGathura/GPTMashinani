@@ -58,7 +58,7 @@ class SmsController extends Controller
             'name'=>$fullName,
             'phone'=>$recipient,
             'email'=>$fictionalEmail,
-            'password'=>$password,
+            'password'=>bcrypt($password),
         ]);
 
         $message ='Welcome to ChatMtaani, Your account has been created on our platform.';
