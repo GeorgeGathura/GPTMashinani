@@ -67,7 +67,7 @@ class SmsController extends Controller
         $message .=' and enter email '.$fictionalEmail.' and  password '.$password;
 
         Artisan::call('sms:send', [
-            'mesage' => $message,
+            'message' => $message,
             'recipient' => $recipient
         ]);
     }
