@@ -28,8 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/converse', [ConversationController::class, 'index'])->name('conversation.index');
-    Route::post('/converse', [ConversationController::class, 'store'])->name('conversation.store');
+    Route::view('/converse', 'conversations.show')->name('conversation.index');
 
 });
 
