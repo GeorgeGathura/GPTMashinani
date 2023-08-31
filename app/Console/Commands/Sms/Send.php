@@ -29,8 +29,8 @@ class Send extends Command
      */
     public function handle()
     {
-        $initialstatus = '';
-        $messageId = '';
+        $finalStatus = '';
+        $messageId = $this->argument('linkId');
         $systemStatus = 1;
         try {
             $this->line('Initalizing Sms distribution...');
@@ -38,22 +38,22 @@ class Send extends Command
                 'message' => $this->argument('message'),
                 'apiKey' => env('TAIFA_API_KEY'),
                 'service_name' => '23348_chat_mtaani_Ksh1_PerSMS',
-                'linkId' => $this->argument('linkId'),
+                'linkId' =>$messageId,
             ];
             //$this->line($body);
-            $response = Http::retry(3, 500)->post('https://beta.taifamobile.co.ke/public/api/replysms', $body);
-            $messageId = $response['messageId'] ?? '';
-            $initialstatus = $response['status'].' - '.$response['statusDescription'];
-            $this->info($response);
-            if ($response['status'] != '00') {
-                $this->warn('Incorrect Status Code');
-            }
-            $response->throwif($response['status'] != '00');
+            Http::retry(3, 500)->post('https://beta.taifamobile.co.ke/public/api/replysms', $body);
+
+            // $finalStatus = $response['status'].' - '.$response['statusDescription'];
+            // $this->info($response);
+            // if ($response['status'] != '00') {
+            //     $this->warn('Incorrect Status Code');
+            // }
+            // $response->throwif($response['status'] != '00');
 
         } catch (ConnectionException $e) {
             //notify admin taifa mobile is down
             //set all sms as jobs for later
-            $initialstatus = '01 - FAILED';
+            $finalStatus = '01 - FAILED';
             $this->error('A connection error occured');
             $systemStatus = 0;
         } catch (RequestException $e) {
@@ -65,20 +65,9 @@ class Send extends Command
             98 - Service not found
             99 - Missing required details
             */
-            $initialstatus = '01 - FAILED';
-            $systemStatus = 0;
+            // $finalStatus = '01 - FAILED';
+            // $systemStatus = 0;
             $this->error('A request error occured');
-        } finally {
-
-
-            SmsLog::create([
-                'message' => $this->argument('message'),
-                'phoneNumber' => $this->argument('recipient'),
-                'source' => 'SYSTEM',
-                'initialStatus' => $initialstatus,
-                'messageId' => $messageId,
-                'systemStatus' => $systemStatus,
-            ]);
         }
     }
 }
