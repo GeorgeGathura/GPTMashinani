@@ -69,7 +69,7 @@ class SmsController extends Controller
      */
     private function firstUse($recipient,$messageId)
     {
-        $message = 'Hello. To get started Enter your Name';
+        $message = 'Hello. To get started enter your Full Name';
 
         Artisan::call('sms:send', [
             'message' => $message,
@@ -95,8 +95,9 @@ class SmsController extends Controller
 
         $message = 'Welcome to ChatMtaani, Your account has been created on our platform.';
         $message .= 'You can ask our A.I platform questions via SMS.';
-        $message .= ' To access it in the web go to www.chatmtaani.com';
-        $message .= ' and enter email '.$fictionalEmail.' and  password '.$password;
+        $message .= ' Visit our website at www.chatmtaani.com for more information.';
+
+       // $message .= ' and enter email '.$fictionalEmail.' and  password '.$password;
 
         Artisan::call('sms:send', [
             'message' => $message,
