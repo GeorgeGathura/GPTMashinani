@@ -15,7 +15,7 @@ class Send extends Command
      *
      * @var string
      */
-    protected $signature = 'sms:send {recipient} {message} ';
+    protected $signature = 'sms:send {recipient} {linkId} {message} ';
 
     /**
      * The console command description.
@@ -38,7 +38,7 @@ class Send extends Command
                 'message' => $this->argument('message'),
                 'apiKey' => env('TAIFA_API_KEY'),
                 'service_name' => '23348_chat_mtaani_Ksh1_PerSMS',
-                'recepients' => $this->argument('recipient'),
+                'linkId' => $this->argument('linkId'),
             ];
             //$this->line($body);
             $response = Http::retry(3, 500)->post('https://beta.taifamobile.co.ke/public/api/sms', $body);
@@ -69,6 +69,7 @@ class Send extends Command
             $systemStatus = 0;
             $this->error('A request error occured');
         } finally {
+
 
             SmsLog::create([
                 'message' => $this->argument('message'),

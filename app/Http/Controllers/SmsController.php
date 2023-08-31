@@ -48,9 +48,9 @@ class SmsController extends Controller
         ]);
 
         if ($detectedUser) {
-            $this->converse($detectedUser, $message);
+            $this->converse($detectedUser, $message,$content->link_id);
         } else {
-            $this->register($phoneNumber, $message);
+            $this->register($phoneNumber, $message,$content->link_id);
         }
 
         return response()->json(['success' => 'success'], 200);
@@ -59,7 +59,7 @@ class SmsController extends Controller
     /**
      * Register a subscriber into the system
      */
-    private function register($recipient, $fullName)
+    private function register($recipient, $fullName,$messageId)
     {
         $password = $this->generateRandomString(5);
         $fictionalEmail = $this->clean($fullName).'@chatmtaani.com';
@@ -79,6 +79,7 @@ class SmsController extends Controller
         Artisan::call('sms:send', [
             'message' => $message,
             'recipient' => $recipient,
+            'linkId' => $messageId,
         ]);
     }
 
@@ -96,13 +97,14 @@ class SmsController extends Controller
         return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
     }
 
-    private function converse(User $user, $message)
+    private function converse(User $user, $message,$messageId)
     {
         $response = $this->communicate($user, $message);
 
         Artisan::call('sms:send', [
             'message' => $response,
             'recipient' => $user->phone,
+            'linkId' => $messageId,
         ]);
     }
 
@@ -113,7 +115,7 @@ class SmsController extends Controller
         $client = OpenAI::client($yourApiKey);
 
         $maxToken = 120 + strlen($question);
-
+        $question .='In less than 160 words, '.$question;
         $result = $client->completions()->create([
             'model' => 'text-davinci-003',
             'prompt' => $question,
