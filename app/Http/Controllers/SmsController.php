@@ -38,6 +38,10 @@ class SmsController extends Controller
             ->orWhere('phone', $phoneNumber2)
             ->first();
 
+        $noLogs = SmsLog::where('phoneNumber',$phoneNumber)
+                        ->orWhere('phoneNumber', $phoneNumber2)
+                        ->count();
+
         SmsLog::create([
             'message' => $message,
             'phoneNumber' => $phoneNumber,
@@ -50,10 +54,28 @@ class SmsController extends Controller
         if ($detectedUser) {
             $this->converse($detectedUser, $message,$content->link_id);
         } else {
-            $this->register($phoneNumber, $message,$content->link_id);
+
+            if($noLogs == 0){
+                $this->firstUse($phoneNumber,$content->link_id);
+            }else{
+                $this->register($phoneNumber, $message,$content->link_id);
+            }
         }
 
         return response()->json(['success' => 'success'], 200);
+    }
+    /**
+     * Register a subscriber into the system
+     */
+    private function firstUse($recipient,$messageId)
+    {
+        $message = 'Hello. To get started Enter your Name';
+
+        Artisan::call('sms:send', [
+            'message' => $message,
+            'recipient' => $recipient,
+            'linkId' => $messageId,
+        ]);
     }
 
     /**
