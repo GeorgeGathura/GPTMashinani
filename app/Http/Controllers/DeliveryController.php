@@ -20,10 +20,11 @@ class DeliveryController extends Controller
      */
     public function receive(Request $request): JsonResponse
     {
+        $content = json_decode($request->getContent());
         //identifies message first
-        $messageId = $request->input('message_id');
-        $phoneNumber = $request->input('phone_number');
-        $status = $request->input('status');
+        $messageId = $content->message_id;
+        $phoneNumber = $content->phone_number;
+        $status = $content->status;
 
         $messageLog = SmsLog::where('phoneNumber', $phoneNumber)
             ->where('messageId', $messageId)
