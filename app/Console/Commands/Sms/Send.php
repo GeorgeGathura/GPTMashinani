@@ -41,7 +41,7 @@ class Send extends Command
                 'linkId' => $this->argument('linkId'),
             ];
             //$this->line($body);
-            $response = Http::retry(3, 500)->post('https://beta.taifamobile.co.ke/public/api/sms', $body);
+            $response = Http::retry(3, 500)->post('https://beta.taifamobile.co.ke/public/api/replysms', $body);
             $messageId = $response['messageId'] ?? '';
             $initialstatus = $response['status'].' - '.$response['statusDescription'];
             $this->info($response);
