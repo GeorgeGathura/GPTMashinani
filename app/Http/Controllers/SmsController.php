@@ -167,6 +167,8 @@ class SmsController extends Controller
         $result = $client->chat()->create([
             'model' => 'gpt-3.5-turbo',
             'messages' => $messages,
+            'temperature' => 0.4,
+            'max_tokens' => $maxToken,
         ]);
         //dd($result);
         // $result = $client->chat()->create([
