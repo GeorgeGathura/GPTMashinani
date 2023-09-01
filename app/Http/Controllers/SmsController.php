@@ -136,7 +136,7 @@ class SmsController extends Controller
         $yourApiKey = env('OPENAI_API_KEY');
         $client = OpenAI::client($yourApiKey);
 
-        $maxToken = 30 + strlen($question);
+        $maxToken = 80 + strlen($question);
         //$question .='In less than 160 words, '.$question;
         // $result = $client->completions()->create([
         //     'model' => 'text-davinci-003',
