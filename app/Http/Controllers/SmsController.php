@@ -92,10 +92,10 @@ class SmsController extends Controller
             'password' => bcrypt($password),
         ]);
 
-        $message = 'Welcome to ChatMtaani, Your account has been created on our platform.';
-        $message .= 'You can ask our A.I platform questions via SMS.';
+        $message = 'Welcome to the BIGKUKU Annual Farmers Conference powered by ChatMtaani. Your account has been created on our platform.';
+        $message .= ' You can ask our A.I platform questions via SMS.';
         $message .= ' Visit our website at www.chatmtaani.com for more information.';
-
+        $message .=' To proceed, ask me any question';
        // $message .= ' and enter email '.$fictionalEmail.' and  password '.$password;
 
         Artisan::call('sms:send', [
