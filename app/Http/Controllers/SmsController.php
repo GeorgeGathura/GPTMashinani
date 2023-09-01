@@ -33,7 +33,6 @@ class SmsController extends Controller
         }
 
         $message = $content->message;
-
         $detectedUser = User::where('phone', $phoneNumber)
             ->orWhere('phone', $phoneNumber2)
             ->first();
@@ -123,7 +122,7 @@ class SmsController extends Controller
     private function converse(User $user, $message,$messageId)
     {
         $response = $this->communicate($user, $message);
-
+        //dd($response);
         Artisan::call('sms:send', [
             'message' => $response,
             'recipient' => $user->phone,
@@ -139,13 +138,37 @@ class SmsController extends Controller
 
         $maxToken = 120 + strlen($question);
         $question .='In less than 160 words, '.$question;
-        $result = $client->completions()->create([
-            'model' => 'text-davinci-003',
-            'prompt' => $question,
-            'temperature' => 0.4,
-            'max_tokens' => $maxToken,
-        ]);
+        // $result = $client->completions()->create([
+        //     'model' => 'text-davinci-003',
+        //     'prompt' => $question,
+        //     'temperature' => 0.4,
+        //     'max_tokens' => $maxToken,
+        // ]);
 
+        $history = Conversation::where('user_id',$user->id)->get();
+        $messages=array();
+        foreach($history as $conversation)
+        {
+
+            array_push($messages,[
+                'role'=>'user',
+                'content'=>$conversation->query
+            ],[
+                'role'=>'assistant',
+                'content'=>$conversation->answer
+            ]);
+        }
+        array_push($messages,[
+            'role'=>'user',
+            'content'=>$question
+        ]);
+        //dd($messages);
+
+        $result = $client->chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages' => $messages,
+        ]);
+        //dd($result);
         // $result = $client->chat()->create([
         //     'model' => 'gpt-3.5-turbo',
         //     'messages' => [
@@ -158,7 +181,7 @@ class SmsController extends Controller
         //dd($result);
         $response = '';
         foreach ($result['choices'] as $choice) {
-            $response .= $choice['text'];
+            $response .= $choice['message']['content'];
         }
         $wordCount = strlen($question) + strlen($response);
 
