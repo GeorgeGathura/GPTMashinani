@@ -37,9 +37,9 @@ class SmsController extends Controller
             ->orWhere('phone', $phoneNumber2)
             ->first();
 
-        $noLogs = SmsLog::where('phoneNumber',$phoneNumber)
-                        ->orWhere('phoneNumber', $phoneNumber2)
-                        ->count();
+        $noLogs = SmsLog::where('phoneNumber', $phoneNumber)
+            ->orWhere('phoneNumber', $phoneNumber2)
+            ->count();
 
         SmsLog::create([
             'message' => $message,
@@ -51,22 +51,23 @@ class SmsController extends Controller
         ]);
 
         if ($detectedUser) {
-            $this->converse($detectedUser, $message,$content->link_id);
+            $this->converse($detectedUser, $message, $content->link_id);
         } else {
 
-            if($noLogs == 0){
-                $this->firstUse($phoneNumber,$content->link_id);
-            }else{
-                $this->register($phoneNumber, $message,$content->link_id);
+            if ($noLogs == 0) {
+                $this->firstUse($phoneNumber, $content->link_id);
+            } else {
+                $this->register($phoneNumber, $message, $content->link_id);
             }
         }
 
         return response()->json(['success' => 'success'], 200);
     }
+
     /**
      * Register a subscriber into the system
      */
-    private function firstUse($recipient,$messageId)
+    private function firstUse($recipient, $messageId)
     {
         $message = 'Hello. To get started enter your Full Name';
 
@@ -80,11 +81,16 @@ class SmsController extends Controller
     /**
      * Register a subscriber into the system
      */
-    private function register($recipient, $fullName,$messageId)
+    private function register($recipient, $fullName, $messageId)
     {
         $password = $this->generateRandomString(5);
-        $fictionalEmail = $this->clean($fullName).'@chatmtaani.com';
 
+        $fictionalEmail = $this->clean($fullName).'@chatmtaani.com';
+        $exists = User::where('email',$fictionalEmail)->count();
+        if($exists!=0){
+            $randomLetters=$this->generateRandomString(5);
+            $fictionalEmail.=$fictionalEmail.$randomLetters;
+        }
         User::create([
             'name' => $fullName,
             'phone' => $recipient,
@@ -95,8 +101,8 @@ class SmsController extends Controller
         $message = 'Welcome to ChatMtaani. Your account has been created on our platform.';
         $message .= ' You can ask our A.I platform questions via SMS.';
         $message .= ' Visit our website at www.chatmtaani.com for more information.';
-        $message .=' To proceed, ask me any question';
-       // $message .= ' and enter email '.$fictionalEmail.' and  password '.$password;
+        $message .= ' To proceed, ask me any question';
+        // $message .= ' and enter email '.$fictionalEmail.' and  password '.$password;
 
         Artisan::call('sms:send', [
             'message' => $message,
@@ -119,7 +125,7 @@ class SmsController extends Controller
         return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
     }
 
-    private function converse(User $user, $message,$messageId)
+    private function converse(User $user, $message, $messageId)
     {
         $response = $this->communicate($user, $message);
         //dd($response);
@@ -137,30 +143,35 @@ class SmsController extends Controller
         $client = OpenAI::client($yourApiKey);
 
         $maxToken = 120 + strlen($question);
-        $question .='In less than 500 characters, '.$question;
-        // $result = $client->completions()->create([
-        //     'model' => 'text-davinci-003',
-        //     'prompt' => $question,
-        //     'temperature' => 0.4,
-        //     'max_tokens' => $maxToken,
-        // ]);
+        $question = 'In less than 500 characters, '.$question;
 
-        $history = Conversation::where('user_id',$user->id)->get();
-        $messages=array();
-        foreach($history as $conversation)
-        {
+        $history = Conversation::where('user_id', $user->id)->limit(4)->get();
+        $messages = [];
 
-            array_push($messages,[
-                'role'=>'user',
-                'content'=>$conversation->query
-            ],[
-                'role'=>'assistant',
-                'content'=>$conversation->answer
+        array_push(
+            $messages,
+            [
+                'role' => 'user',
+                'content' => 'Hi, My Name is '.$user->name,
+            ],
+            [
+                'role' => 'assistant',
+                'content' => 'Welcome to ChatMtaani '.$user->name,
+            ]
+        );
+        foreach ($history as $conversation) {
+
+            array_push($messages, [
+                'role' => 'user',
+                'content' => $conversation->query,
+            ], [
+                'role' => 'assistant',
+                'content' => $conversation->answer,
             ]);
         }
-        array_push($messages,[
-            'role'=>'user',
-            'content'=>$question
+        array_push($messages, [
+            'role' => 'user',
+            'content' => $question,
         ]);
         //dd($messages);
 
@@ -170,17 +181,7 @@ class SmsController extends Controller
             'temperature' => 0.4,
             'max_tokens' => $maxToken,
         ]);
-        //dd($result);
-        // $result = $client->chat()->create([
-        //     'model' => 'gpt-3.5-turbo',
-        //     'messages' => [
-        //         ['role' => 'user',
-        //         'content' => $question],
-        //     ],
-        //     'temperature'=>0.4,
-        //     'max_tokens'=>$maxToken
-        // ]);
-        //dd($result);
+
         $response = '';
         foreach ($result['choices'] as $choice) {
             $response .= $choice['message']['content'];
