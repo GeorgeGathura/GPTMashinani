@@ -46,7 +46,7 @@
                                 <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">By democratizing access to cutting-edge AI technology, ChatMtaani aims to empower farmers to make data-driven decisions, thereby increasing their productivity and improving their livelihoods.
                                 </p>
                                 <p class="mt-4 text-gray-500 dark:text-gray-400 text-3xl leading-relaxed">
-                                    To get started, send an SMS to 22348
+                                    To get started, send an SMS to 23348
                                 </p>
                             </div>
                             </div>
