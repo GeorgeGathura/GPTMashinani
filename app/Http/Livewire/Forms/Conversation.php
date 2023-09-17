@@ -15,6 +15,8 @@ class Conversation extends Component
 
     public $trail;
 
+    public $profile;
+
     public function rules()
     {
         return [
@@ -22,14 +24,15 @@ class Conversation extends Component
         ];
     }
 
-    public function mount()
+    public function mount($profile='')
     {
+       $this->profile = $profile!='' ? $profile: Auth::id();
        $this->displayConversation();
     }
 
     public function displayConversation()
     {
-        $this->trail = ChatConversation::where('user_id', Auth::id())->get();
+        $this->trail = ChatConversation::where('user_id', $this->profile)->get();
     }
     /**
      * Store a newly created resource in storage.

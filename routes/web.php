@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConversationController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\Filters\Accounts;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::view('/converse', 'conversations.show')->name('conversation.index');
+    Route::get('/people', Accounts::class)->name('people.index');
 
 });
 
