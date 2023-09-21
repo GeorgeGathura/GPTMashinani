@@ -30,11 +30,12 @@ class DeliveryController extends Controller
             ->where('messageId', $messageId)
             ->first();
 
-       // dd($messageLog);
+        // dd($messageLog);
         if ($messageLog) {
             $messageLog->deliveryStatus = $status;
             $messageLog->update();
         }
+
         return response()->json(['success' => 'success'], 200);
     }
 }

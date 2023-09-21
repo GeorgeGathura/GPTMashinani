@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('sms_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('phoneNumber',30);
-            $table->string('source',20); //user or system
-            $table->string('messageId',100)->nullable();
+            $table->string('phoneNumber', 30);
+            $table->string('source', 20); //user or system
+            $table->string('messageId', 100)->nullable();
             //carrier statuses
-            $table->string('initialStatus',100);
-            $table->string('deliveryStatus',100)->nullable();
+            $table->string('initialStatus', 100);
+            $table->string('deliveryStatus', 100)->nullable();
             //system status
             $table->tinyInteger('systemStatus');
             $table->text('message');

@@ -4,13 +4,11 @@ namespace App\Http\Livewire\Forms;
 
 use App\Models\Conversation as ChatConversation;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 use OpenAI;
 
 class Conversation extends Component
 {
-
     public $question;
 
     public $trail;
@@ -20,20 +18,21 @@ class Conversation extends Component
     public function rules()
     {
         return [
-            'question'=>['required']
+            'question' => ['required'],
         ];
     }
 
-    public function mount($profile='')
+    public function mount($profile = '')
     {
-       $this->profile = $profile!='' ? $profile: Auth::id();
-       $this->displayConversation();
+        $this->profile = $profile != '' ? $profile : Auth::id();
+        $this->displayConversation();
     }
 
     public function displayConversation()
     {
         $this->trail = ChatConversation::where('user_id', $this->profile)->get();
     }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -50,15 +49,14 @@ class Conversation extends Component
         //         ['role' => 'user', 'content' => $request->input('question')],
         //     ]
         // ]);
-        $question = $this->question ?? NULL;
+        $question = $this->question ?? null;
         $maxToken = 120 + strlen($question);
-
 
         $result = $client->completions()->create([
             'model' => 'text-davinci-003',
             'prompt' => $question,
-            'temperature'=>0.4,
-            'max_tokens'=>$maxToken
+            'temperature' => 0.4,
+            'max_tokens' => $maxToken,
         ]);
 
         // $result = $client->chat()->create([
@@ -79,12 +77,10 @@ class Conversation extends Component
             'answer' => $response,
             'user_id' => Auth::id(),
             'smsCompliance' => false,
-            'wordCount' => $wordCount
+            'wordCount' => $wordCount,
         ]);
 
-
     }
-
 
     public function render()
     {

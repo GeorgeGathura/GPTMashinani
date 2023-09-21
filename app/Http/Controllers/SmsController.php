@@ -86,10 +86,10 @@ class SmsController extends Controller
         $password = $this->generateRandomString(5);
 
         $fictionalEmail = $this->clean($fullName).'@chatmtaani.com';
-        $exists = User::where('email',$fictionalEmail)->count();
-        if($exists!=0){
-            $randomLetters=$this->generateRandomString(5);
-            $fictionalEmail.=$fictionalEmail.$randomLetters;
+        $exists = User::where('email', $fictionalEmail)->count();
+        if ($exists != 0) {
+            $randomLetters = $this->generateRandomString(5);
+            $fictionalEmail .= $fictionalEmail.$randomLetters;
         }
         User::create([
             'name' => $fullName,

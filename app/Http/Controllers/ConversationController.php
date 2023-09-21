@@ -16,9 +16,8 @@ class ConversationController extends Controller
     {
         $trail = Conversation::where('user_id', Auth::id())->get();
 
-
         return view('conversations.show', [
-            'trail' => $trail
+            'trail' => $trail,
         ]);
     }
 
@@ -40,16 +39,17 @@ class ConversationController extends Controller
         //         ['role' => 'user', 'content' => $request->input('question')],
         //     ]
         // ]);
-        $question = $request->input('question') ?? NULL;
+        $question = $request->input('question') ?? null;
         $maxToken = 120 + strlen($question);
-        if ($question == null)
+        if ($question == null) {
             return back();
+        }
 
         $result = $client->completions()->create([
             'model' => 'text-davinci-003',
             'prompt' => $question,
-            'temperature'=>0.4,
-            'max_tokens'=>$maxToken
+            'temperature' => 0.4,
+            'max_tokens' => $maxToken,
         ]);
 
         // $result = $client->chat()->create([
@@ -70,9 +70,8 @@ class ConversationController extends Controller
             'answer' => $response,
             'user_id' => Auth::id(),
             'smsCompliance' => false,
-            'wordCount' => $wordCount
+            'wordCount' => $wordCount,
         ]);
-
 
         return back();
     }
@@ -84,9 +83,8 @@ class ConversationController extends Controller
     {
         $trail = Conversation::where('user_id', Auth::id())->get();
 
-
         return view('conversations.show', [
-            'trail' => $trail
+            'trail' => $trail,
         ]);
     }
 

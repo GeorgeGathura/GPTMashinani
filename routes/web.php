@@ -1,9 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ConversationController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Filters\Accounts;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------

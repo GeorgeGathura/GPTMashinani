@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\Sms;
 
-use App\Models\SmsLog;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
@@ -38,9 +37,8 @@ class Send extends Command
                 'message' => $this->argument('message'),
                 'apiKey' => env('TAIFA_API_KEY'),
                 'service_name' => '23348_chat_mtaani_Ksh1_PerSMS',
-                'linkId' =>$messageId,
+                'linkId' => $messageId,
             ];
-
 
             //$this->line($body);
             Http::retry(3, 500)->post('https://beta.taifamobile.co.ke/public/api/replysms', $body);

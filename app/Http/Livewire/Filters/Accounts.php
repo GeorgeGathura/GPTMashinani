@@ -11,13 +11,16 @@ use Livewire\WithPagination;
 class Accounts extends Component
 {
     use WithPagination;
+
     public $search;
+
     public $selectedProfile;
 
-
-    public function mount(){
+    public function mount()
+    {
         $this->selectedProfile = Auth::id();
     }
+
     public function updatingSearch()
     {
         $this->resetPage();
@@ -30,12 +33,12 @@ class Accounts extends Component
 
     public function render()
     {
-        return view('livewire.filters.accounts',[
-            'people'=>User::where('name','like','%'.$this->search.'%')
-            ->orwhere('email','like','%'.$this->search.'%')
-            ->orwhere('phone','like','%'.$this->search.'%')
-            ->paginate(12),
-            'trail'=>Conversation::where('user_id',$this->selectedProfile)->get()
+        return view('livewire.filters.accounts', [
+            'people' => User::where('name', 'like', '%'.$this->search.'%')
+                ->orwhere('email', 'like', '%'.$this->search.'%')
+                ->orwhere('phone', 'like', '%'.$this->search.'%')
+                ->paginate(12),
+            'trail' => Conversation::where('user_id', $this->selectedProfile)->get(),
         ]);
     }
 }

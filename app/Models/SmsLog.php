@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SmsLog extends Model
 {
     use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,6 +20,6 @@ class SmsLog extends Model
         'phoneNumber',
         'initialStatus',
         'messageId',
-        'systemStatus'
+        'systemStatus',
     ];
 }
