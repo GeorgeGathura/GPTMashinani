@@ -38,6 +38,7 @@ class SmsController extends Controller
         $noLogs = SmsLog::where('phoneNumber', $phoneNumber)
             ->orWhere('phoneNumber', $phoneNumber2)
             ->count();
+
         if ($noLogs == 0) {
             $this->register($phoneNumber);
         }
@@ -175,12 +176,13 @@ class SmsController extends Controller
                 'content' => $conversation->answer,
             ]);
         }
-        if(sizeof($messages)>=1){
+
+        //if(sizeof($messages)>=1){
             array_push($messages, [
                 'role' => 'user',
                 'content' => $question,
             ]);
-        }
+        //}
         //dd($messages);
 
         $result = $client->chat()->create([
