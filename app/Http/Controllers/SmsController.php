@@ -33,14 +33,14 @@ class SmsController extends Controller
         }
 
         $message = $content->message;
-        $detectedUser = User::where('phone', $phoneNumber)
-            ->orWhere('phone', $phoneNumber2)
-            ->first();
+
 
         $noLogs = SmsLog::where('phoneNumber', $phoneNumber)
             ->orWhere('phoneNumber', $phoneNumber2)
             ->count();
-
+        if ($noLogs == 0) {
+            $this->register($phoneNumber);
+        }
         SmsLog::create([
             'message' => $message,
             'phoneNumber' => $phoneNumber,
@@ -50,15 +50,19 @@ class SmsController extends Controller
             'systemStatus' => 1,
         ]);
 
+        $detectedUser = User::where('phone', $phoneNumber)
+                            ->orWhere('phone', $phoneNumber2)
+                            ->first();
+
         if ($detectedUser) {
             $this->converse($detectedUser, $message, $content->link_id);
         } else {
 
-            if ($noLogs == 0) {
-                $this->firstUse($phoneNumber, $content->link_id);
-            } else {
-                $this->register($phoneNumber, $message, $content->link_id);
-            }
+            // if ($noLogs == 0) {
+            //     $this->firstUse($phoneNumber, $content->link_id);
+            // } else {
+            //     $this->register($phoneNumber, $message, $content->link_id);
+            // }
         }
 
         return response()->json(['success' => 'success'], 200);
@@ -81,10 +85,12 @@ class SmsController extends Controller
     /**
      * Register a subscriber into the system
      */
-    private function register($recipient, $fullName, $messageId)
+    private function register($recipient, $fullName='', $messageId='')
     {
         $password = $this->generateRandomString(5);
-
+        if($fullName==''){
+            $fullName = $this->generateRandomString(12);
+        }
         $fictionalEmail = $this->clean($fullName).'@chatmtaani.com';
         $exists = User::where('email', $fictionalEmail)->count();
         if ($exists != 0) {
@@ -98,17 +104,17 @@ class SmsController extends Controller
             'password' => bcrypt($password),
         ]);
 
-        $message = 'Welcome to ChatMtaani. Your account has been created on our platform.';
-        $message .= ' You can ask our A.I platform questions via SMS.';
-        $message .= ' Visit our website at www.chatmtaani.com for more information.';
-        $message .= ' To proceed, ask me any question';
-        // $message .= ' and enter email '.$fictionalEmail.' and  password '.$password;
+        // $message = 'Welcome to ChatMtaani. Your account has been created on our platform.';
+        // $message .= ' You can ask our A.I platform questions via SMS.';
+        // $message .= ' Visit our website at www.chatmtaani.com for more information.';
+        // $message .= ' To proceed, ask me any question';
+        // // $message .= ' and enter email '.$fictionalEmail.' and  password '.$password;
 
-        Artisan::call('sms:send', [
-            'message' => $message,
-            'recipient' => $recipient,
-            'linkId' => $messageId,
-        ]);
+        // Artisan::call('sms:send', [
+        //     'message' => $message,
+        //     'recipient' => $recipient,
+        //     'linkId' => $messageId,
+        // ]);
     }
 
     private function clean($string)
