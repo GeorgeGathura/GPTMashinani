@@ -175,10 +175,12 @@ class SmsController extends Controller
                 'content' => $conversation->answer,
             ]);
         }
-        array_push($messages, [
-            'role' => 'user',
-            'content' => $question,
-        ]);
+        if(sizeof($messages)>=1){
+            array_push($messages, [
+                'role' => 'user',
+                'content' => $question,
+            ]);
+        }
         //dd($messages);
 
         $result = $client->chat()->create([
