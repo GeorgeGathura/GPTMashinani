@@ -27,21 +27,20 @@ class SmsController extends Controller
         $phoneNumber = str_replace('"', '', $content->phone_number);
         $phoneNumber2 = '';
         if (substr($phoneNumber, 0, 3) == '254') {
-            $phoneNumber2 = '0' . substr($phoneNumber, 3);
+            $phoneNumber2 = '0'.substr($phoneNumber, 3);
         } else {
-            $phoneNumber2 = '254' . substr($phoneNumber, 1);
+            $phoneNumber2 = '254'.substr($phoneNumber, 1);
         }
 
         $message = $content->message;
-
+        $detectedUser = User::where('phone', $phoneNumber)
+            ->orWhere('phone', $phoneNumber2)
+            ->first();
 
         $noLogs = SmsLog::where('phoneNumber', $phoneNumber)
             ->orWhere('phoneNumber', $phoneNumber2)
             ->count();
 
-        if ($noLogs == 0) {
-            $this->register($phoneNumber);
-        }
         SmsLog::create([
             'message' => $message,
             'phoneNumber' => $phoneNumber,
@@ -51,19 +50,15 @@ class SmsController extends Controller
             'systemStatus' => 1,
         ]);
 
-        $detectedUser = User::where('phone', $phoneNumber)
-            ->orWhere('phone', $phoneNumber2)
-            ->first();
-
         if ($detectedUser) {
             $this->converse($detectedUser, $message, $content->link_id);
         } else {
 
-            // if ($noLogs == 0) {
-            //     $this->firstUse($phoneNumber, $content->link_id);
-            // } else {
-            //     $this->register($phoneNumber, $message, $content->link_id);
-            // }
+            if ($noLogs == 0) {
+                $this->firstUse($phoneNumber, $content->link_id);
+            } else {
+                $this->register($phoneNumber, $message, $content->link_id);
+            }
         }
 
         return response()->json(['success' => 'success'], 200);
@@ -74,7 +69,7 @@ class SmsController extends Controller
      */
     private function firstUse($recipient, $messageId)
     {
-        $message = 'Hello. To get started enter your Full Name';
+        $message = 'Hello. To get started enter your First Name';
 
         Artisan::call('sms:send', [
             'message' => $message,
@@ -86,17 +81,15 @@ class SmsController extends Controller
     /**
      * Register a subscriber into the system
      */
-    private function register($recipient, $fullName = '', $messageId = '')
+    private function register($recipient, $fullName, $messageId)
     {
         $password = $this->generateRandomString(5);
-        if ($fullName == '') {
-            $fullName = $this->generateRandomString(12);
-        }
-        $fictionalEmail = $this->clean($fullName) . '@chatmtaani.com';
+
+        $fictionalEmail = $this->clean($fullName).'@chatmtaani.com';
         $exists = User::where('email', $fictionalEmail)->count();
         if ($exists != 0) {
             $randomLetters = $this->generateRandomString(5);
-            $fictionalEmail .= $fictionalEmail . $randomLetters;
+            $fictionalEmail .= $fictionalEmail.$randomLetters;
         }
         User::create([
             'name' => $fullName,
@@ -145,11 +138,12 @@ class SmsController extends Controller
 
     private function communicate(User $user, $question): string
     {
+        //try {
         $yourApiKey = env('OPENAI_API_KEY');
         $client = OpenAI::client($yourApiKey);
 
         $maxToken = 120 + strlen($question);
-        $question = 'In less than 500 characters, ' . $question;
+        $question = 'In less than 500 characters, '.$question;
 
         $history = Conversation::where('user_id', $user->id)->limit(4)->get();
         $messages = [];
@@ -158,11 +152,11 @@ class SmsController extends Controller
             $messages,
             [
                 'role' => 'user',
-                'content' => 'Hi, My Name is ' . $user->name,
+                'content' => 'Hi, My Name is '.$user->name,
             ],
             [
                 'role' => 'assistant',
-                'content' => 'Welcome to ChatMtaani ' . $user->name,
+                'content' => 'Welcome to ChatMtaani '.$user->name,
             ]
         );
         foreach ($history as $conversation) {
@@ -175,11 +169,11 @@ class SmsController extends Controller
                 'content' => $conversation->answer,
             ]);
         }
-
         array_push($messages, [
             'role' => 'user',
             'content' => $question,
         ]);
+        //dd($messages);
 
         $result = $client->chat()->create([
             'model' => 'gpt-3.5-turbo',
@@ -192,8 +186,6 @@ class SmsController extends Controller
         foreach ($result['choices'] as $choice) {
             $response .= $choice['message']['content'];
         }
-
-
         $wordCount = strlen($question) + strlen($response);
 
         Conversation::create([
