@@ -1,103 +1,265 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+
+<script>
+          var isFluid = JSON.parse(localStorage.getItem('isFluid'));
+          if (isFluid) {
+            var container = document.querySelector('[data-layout]');
+            container.classList.remove('container');
+            container.classList.add('container-fluid');
+          }
+        </script>
+        <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand-lg">
+
+          <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarStandard" aria-controls="navbarStandard" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+
+          <a class="navbar-brand me-1 me-sm-3" href="{{ route('dashboard') }}">
+                        <div class="d-flex align-items-center"><x-application-logo  class="me-2"  alt="" width="40" /><span class="font-sans-serif">ChatMtaani</span>
+                        </div>
                     </a>
-                </div>
+          <div class="collapse navbar-collapse scrollbar" id="navbarStandard">
+            <ul class="navbar-nav" data-top-nav-dropdowns="data-top-nav-dropdowns">
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('people.index')" :active="request()->routeIs('conversation.index')">
-                        {{ __('History') }}
-                    </x-nav-link>
-                </div>
-            </div>
+              <li class="nav-item">
+              <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link" href="{{ route('people.index') }}">People</a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link" href="{{ route('dashboard') }}">Register</a>
+              </li>
+            </ul>
+          </div>
+          <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+            <li class="nav-item px-2">
+              <div class="theme-control-toggle fa-icon-wait">
+                <input class="form-check-input ms-0 theme-control-toggle-input" id="themeControlToggle" type="checkbox" data-theme-control="theme" value="dark" />
+                <label class="mb-0 theme-control-toggle-label theme-control-toggle-light" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Switch to light theme"><span class="fas fa-sun fs-0"></span></label>
+                <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Switch to dark theme"><span class="fas fa-moon fs-0"></span></label>
+              </div>
+            </li>
+            <li class="nav-item d-none d-sm-block">
+              <a class="nav-link px-0 notification-indicator notification-indicator-warning notification-indicator-fill fa-icon-wait" href="../app/e-commerce/shopping-cart.html"><span class="fas fa-shopping-cart" data-fa-transform="shrink-7" style="font-size: 33px;"></span><span class="notification-indicator-number">1</span></a>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ml-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link notification-indicator notification-indicator-primary px-0 fa-icon-wait" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hide-on-body-scroll="data-hide-on-body-scroll"><span class="fas fa-bell" data-fa-transform="shrink-6" style="font-size: 33px;"></span></a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-menu-notification dropdown-caret-bg" aria-labelledby="navbarDropdownNotification">
+                <div class="card card-notification shadow-none">
+                  <div class="card-header">
+                    <div class="row justify-content-between align-items-center">
+                      <div class="col-auto">
+                        <h6 class="card-header-title mb-0">Notifications</h6>
+                      </div>
+                      <div class="col-auto ps-0 ps-sm-3"><a class="card-link fw-normal" href="#">Mark all as read</a></div>
+                    </div>
+                  </div>
+                  <div class="scrollbar-overlay" style="max-height:19rem">
+                    <div class="list-group list-group-flush fw-normal fs--1">
+                      <div class="list-group-title border-bottom">NEW</div>
+                      <div class="list-group-item">
+                        <a class="notification notification-flush notification-unread" href="#!">
+                          <div class="notification-avatar">
+                            <div class="avatar avatar-2xl me-3">
+                              <img class="rounded-circle" src="../assets/img/team/1-thumb.png" alt="" />
 
-                            <div class="ml-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
                             </div>
-                        </button>
-                    </x-slot>
+                          </div>
+                          <div class="notification-body">
+                            <p class="mb-1"><strong>Emma Watson</strong> replied to your comment : "Hello world 😍"</p>
+                            <span class="notification-time"><span class="me-2" role="img" aria-label="Emoji">💬</span>Just now</span>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
+                          </div>
+                        </a>
+
+                      </div>
+                      <div class="list-group-item">
+                        <a class="notification notification-flush notification-unread" href="#!">
+                          <div class="notification-avatar">
+                            <div class="avatar avatar-2xl me-3">
+                              <div class="avatar-name rounded-circle"><span>AB</span></div>
+                            </div>
+                          </div>
+                          <div class="notification-body">
+                            <p class="mb-1"><strong>Albert Brooks</strong> reacted to <strong>Mia Khalifa's</strong> status</p>
+                            <span class="notification-time"><span class="me-2 fab fa-gratipay text-danger"></span>9hr</span>
+
+                          </div>
+                        </a>
+
+                      </div>
+                      <div class="list-group-title border-bottom">EARLIER</div>
+                      <div class="list-group-item">
+                        <a class="notification notification-flush" href="#!">
+                          <div class="notification-avatar">
+                            <div class="avatar avatar-2xl me-3">
+                              <img class="rounded-circle" src="../assets/img/icons/weather-sm.jpg" alt="" />
+
+                            </div>
+                          </div>
+                          <div class="notification-body">
+                            <p class="mb-1">The forecast today shows a low of 20&#8451; in California. See today's weather.</p>
+                            <span class="notification-time"><span class="me-2" role="img" aria-label="Emoji">🌤️</span>1d</span>
+
+                          </div>
+                        </a>
+
+                      </div>
+                      <div class="list-group-item">
+                        <a class="border-bottom-0 notification-unread  notification notification-flush" href="#!">
+                          <div class="notification-avatar">
+                            <div class="avatar avatar-xl me-3">
+                              <img class="rounded-circle" src="../assets/img/logos/oxford.png" alt="" />
+
+                            </div>
+                          </div>
+                          <div class="notification-body">
+                            <p class="mb-1"><strong>University of Oxford</strong> created an event : "Causal Inference Hilary 2019"</p>
+                            <span class="notification-time"><span class="me-2" role="img" aria-label="Emoji">✌️</span>1w</span>
+
+                          </div>
+                        </a>
+
+                      </div>
+                      <div class="list-group-item">
+                        <a class="border-bottom-0 notification notification-flush" href="#!">
+                          <div class="notification-avatar">
+                            <div class="avatar avatar-xl me-3">
+                              <img class="rounded-circle" src="../assets/img/team/10.jpg" alt="" />
+
+                            </div>
+                          </div>
+                          <div class="notification-body">
+                            <p class="mb-1"><strong>James Cameron</strong> invited to join the group: United Nations International Children's Fund</p>
+                            <span class="notification-time"><span class="me-2" role="img" aria-label="Emoji">🙋‍</span>2d</span>
+
+                          </div>
+                        </a>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-center border-top"><a class="card-link d-block" href="../app/social/notifications.html">View all</a></div>
+                </div>
+              </div>
+
+            </li>
+            <li class="nav-item dropdown px-1">
+              <a class="nav-link fa-icon-wait nine-dots p-1" id="navbarDropdownMenu" role="button" data-hide-on-body-scroll="data-hide-on-body-scroll" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="43" viewBox="0 0 16 16" fill="none">
+                  <circle cx="2" cy="2" r="2" fill="#6C6E71"></circle>
+                  <circle cx="2" cy="8" r="2" fill="#6C6E71"></circle>
+                  <circle cx="2" cy="14" r="2" fill="#6C6E71"></circle>
+                  <circle cx="8" cy="8" r="2" fill="#6C6E71"></circle>
+                  <circle cx="8" cy="14" r="2" fill="#6C6E71"></circle>
+                  <circle cx="14" cy="8" r="2" fill="#6C6E71"></circle>
+                  <circle cx="14" cy="14" r="2" fill="#6C6E71"></circle>
+                  <circle cx="8" cy="2" r="2" fill="#6C6E71"></circle>
+                  <circle cx="14" cy="2" r="2" fill="#6C6E71"></circle>
+                </svg></a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-caret-bg" aria-labelledby="navbarDropdownMenu">
+                <div class="card shadow-none">
+                  <div class="scrollbar-overlay nine-dots-dropdown">
+                    <div class="card-body px-3">
+                      <div class="row text-center gx-0 gy-0">
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="../pages/user/profile.html" target="_blank">
+                            <div class="avatar avatar-2xl"> <img class="rounded-circle" src="../assets/img/team/3.jpg" alt="" /></div>
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2">Account</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="https://themewagon.com/" target="_blank"><img class="rounded" src="../assets/img/nav-icons/themewagon.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Themewagon</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="https://mailbluster.com/" target="_blank"><img class="rounded" src="../assets/img/nav-icons/mailbluster.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Mailbluster</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/google.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Google</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/spotify.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Spotify</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/steam.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Steam</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/github-light.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Github</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/discord.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Discord</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/xbox.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">xbox</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/trello.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Kanban</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/hp.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Hp</p>
+                          </a></div>
+                        <div class="col-12">
+                          <hr class="my-3 mx-n3 bg-200" />
+                        </div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/linkedin.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Linkedin</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/twitter.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Twitter</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/facebook.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Facebook</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/instagram.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Instagram</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/pinterest.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Pinterest</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/slack.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Slack</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="#!" target="_blank"><img class="rounded" src="../assets/img/nav-icons/deviantart.png" alt="" width="40" height="40" />
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2 pt-1">Deviantart</p>
+                          </a></div>
+                        <div class="col-4"><a class="d-block hover-bg-200 px-2 py-3 rounded-3 text-center text-decoration-none" href="../app/events/event-detail.html" target="_blank">
+                            <div class="avatar avatar-2xl">
+                              <div class="avatar-name rounded-circle bg-primary-subtle text-primary"><span class="fs-2">E</span></div>
+                            </div>
+                            <p class="mb-0 fw-medium text-800 text-truncate fs--2">Events</p>
+                          </a></div>
+                        <div class="col-12"><a class="btn btn-outline-primary btn-sm mt-4" href="#!">Show more</a></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </li>
+            <li class="nav-item dropdown"><a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="avatar avatar-xl">
+                  <img class="rounded-circle" src="../assets/img/team/avatar.png" alt="" />
+
+                </div>
+              </a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
+                <div class="bg-white dark__bg-1000 rounded-2">
+
+                  <x-dropdown-link class="dropdown-item" :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
+                  <div class="dropdown-divider"></div>
+                             <!-- Authentication -->
+                             <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('logout')"
+                            <x-dropdown-link class="dropdown-item" :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
 
-            <!-- Hamburger -->
-            <div class="-mr-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
-    </div>
-</nav>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </nav>
