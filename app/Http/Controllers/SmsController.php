@@ -132,7 +132,7 @@ class SmsController extends Controller
         Artisan::call('sms:send', [
             'message' => $response,
             'recipient' => $user->phone,
-            'linkId' => $messageId,
+            //'linkId' => $messageId,
         ]);
     }
 
@@ -176,7 +176,7 @@ class SmsController extends Controller
         //dd($messages);
 
         $result = $client->chat()->create([
-            'model' => 'gpt-3.5-turbo',
+            'model' => 'gpt-3.5-turbo-1106',
             'messages' => $messages,
             'temperature' => 0.4,
             'max_tokens' => $maxToken,
