@@ -15,7 +15,7 @@ class SmsController extends Controller
      * Recipient method for all SMS messages
      * message: "Lorem Ipsum...",
      * phone_number: "2547XXXXXXXX",
-     * link_id: "14101445075801587923",
+     * linkId: "14101445075801587923",
      * message_time: "0000-00-00 00:00:00"
      */
     public function receive(Request $request)
@@ -46,18 +46,18 @@ class SmsController extends Controller
             'phoneNumber' => $phoneNumber,
             'source' => 'USER',
             'initialStatus' => '00 - Success',
-            'messageId' => $content->link_id,
+            'messageId' => $content->linkId,
             'systemStatus' => 1,
         ]);
 
         if ($detectedUser) {
-            $this->converse($detectedUser, $message, $content->link_id);
+            $this->converse($detectedUser, $message, $content->linkId);
         } else {
 
             if ($noLogs == 0) {
-                $this->firstUse($phoneNumber, $content->link_id);
+                $this->firstUse($phoneNumber, $content->linkId);
             } else {
-                $this->register($phoneNumber, $message, $content->link_id);
+                $this->register($phoneNumber, $message, $content->linkId);
             }
         }
 
