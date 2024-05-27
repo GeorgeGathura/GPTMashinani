@@ -18,7 +18,7 @@
                 <input aria-hidden="true" type="checkbox" name="toggle_nav" id="toggle_nav" class="hidden peer astro-UYQPXEOV">
                 <div class="relative z-20 w-full flex justify-between lg:w-max md:px-0 astro-UYQPXEOV">
                     <a href="#home" aria-label="logo" class="flex space-x-2 items-center astro-UYQPXEOV">
-                        <img src="./images/logo.webp" class="h-32 astro-UYQPXEOV">
+                        <img src="{{asset('images/logo.webp')}}" class="h-32 astro-UYQPXEOV">
                         <span class="text-2xl font-bold text-gray-900 dark:text-white astro-UYQPXEOV">ChatMtaani</span>
                     </a>
 
