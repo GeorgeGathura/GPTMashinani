@@ -9,7 +9,7 @@
 		<title>ChatMtaani</title>
 
 		<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="{{ asset('home.css'}}" /></head>
+	<link rel="stylesheet" href="{{ asset('home.css') }}" /></head>
 	<body class="bg-white dark:bg-gray-900 astro-7U5P22V3">
 		<header class="astro-UYQPXEOV">
     <nav class="z-10 w-full absolute astro-UYQPXEOV">
